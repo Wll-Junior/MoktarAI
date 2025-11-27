@@ -5,13 +5,73 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>MoktarAI</title>
 <style>
-/* halkan ku paste full CSS ee v5 scaffold */
+body{margin:0;font-family:sans-serif;background:#121212;color:#fff}
+.header{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#141414}
+.icon-btn{background:#222;color:#fff;border:none;padding:6px 10px;border-radius:6px;cursor:pointer}
+.sidebar{width:220px;background:#1E1E1E;height:100vh;float:left;padding:12px;overflow:auto}
+.main{margin-left:220px;display:flex;flex-direction:column;height:100vh}
+.messages{flex:1;overflow:auto;padding:12px}
+.message{padding:8px;margin:5px;border-radius:6px;position:relative}
+.user{background:#2D8CFF;color:#fff;text-align:right}
+.ai{background:#2E2E2E;color:#E0E0E0;text-align:left}
+.copyBtn{position:absolute;top:4px;right:4px;background:#444;color:#fff;border:none;padding:2px 6px;font-size:12px;cursor:pointer}
+textarea{flex:1;padding:10px;border-radius:6px;background:#1b1b1b;color:#fff;border:1px solid #333}
+.input-row{display:flex;gap:8px;padding:10px;background:#141414}
+.send-btn{background:#2D8CFF;color:#fff;border:none;padding:10px 16px;border-radius:6px;cursor:pointer}
 </style>
 </head>
 <body>
-<!-- halkan ku paste full UI scaffold: header, sidebar, main, modals -->
+<div class="header">
+  <strong>MoktarAI v5</strong>
+  <div>
+    <button class="icon-btn" id="voiceBtn">🎙️ Voice</button>
+    <button class="icon-btn" id="shareBtn">🔗 Share</button>
+    <button class="icon-btn" id="moreBtn">⋯</button>
+  </div>
+</div>
+<div class="sidebar">
+  <h3>Sidebar</h3>
+  <button class="icon-btn">+ New page</button>
+  <button class="icon-btn">Library</button>
+  <button class="icon-btn">Project</button>
+  <button class="icon-btn">Conversations</button>
+  <hr>
+  <button class="icon-btn">Account Panel</button>
+</div>
+<div class="main">
+  <div class="messages" id="messages">
+    <div class="message ai">Ku soo dhawoow! Maxaan kaa caawin karaa?</div>
+  </div>
+  <div class="input-row">
+    <button class="icon-btn" id="micInline">🎤</button>
+    <textarea id="userInput" rows="2" placeholder="Qor fariintaada..."></textarea>
+    <button class="send-btn" id="sendBtn">Send</button>
+  </div>
+</div>
 <script>
-/* halkan ku paste full JavaScript logic ee v5 scaffold */
+function addMessage(role,text){
+  const d=document.createElement('div');
+  d.className='message '+role;
+  d.textContent=text;
+  if(role==='ai'){
+    const copy=document.createElement('button');
+    copy.className='copyBtn';
+    copy.textContent='Copy';
+    copy.onclick=()=>navigator.clipboard.writeText(text);
+    d.appendChild(copy);
+  }
+  document.getElementById('messages').appendChild(d);
+  document.getElementById('messages').scrollTop=document.getElementById('messages').scrollHeight;
+}
+document.getElementById('sendBtn').onclick=()=>{
+  const t=document.getElementById('userInput');
+  const v=t.value.trim();
+  if(!v)return;
+  addMessage('user',v);
+  t.value='';
+  addMessage('ai','AI is processing...');
+  setTimeout(()=>{document.querySelector('.message.ai:last-child').textContent='**Waa ku mahadsan tahay!** Tusaale jawaab markdown + copy ✔';},1200);
+};
 </script>
 </body>
 </html>
