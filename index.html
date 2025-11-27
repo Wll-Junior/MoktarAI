@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -52,12 +52,12 @@ textarea{flex:1;padding:10px;border-radius:6px;background:#1b1b1b;color:#fff;bor
 function addMessage(role,text){
   const d=document.createElement('div');
   d.className='message '+role;
-  d.textContent=text;
+  d.innerHTML=text; // use innerHTML so markdown-like formatting shows
   if(role==='ai'){
     const copy=document.createElement('button');
     copy.className='copyBtn';
     copy.textContent='Copy';
-    copy.onclick=()=>navigator.clipboard.writeText(text);
+    copy.onclick=()=>navigator.clipboard.writeText(d.textContent);
     d.appendChild(copy);
   }
   document.getElementById('messages').appendChild(d);
@@ -70,7 +70,10 @@ document.getElementById('sendBtn').onclick=()=>{
   addMessage('user',v);
   t.value='';
   addMessage('ai','AI is processing...');
-  setTimeout(()=>{document.querySelector('.message.ai:last-child').textContent='**Waa ku mahadsan tahay!** Tusaale jawaab markdown + copy ✔';},1200);
+  setTimeout(()=>{
+    document.querySelector('.message.ai:last-child').innerHTML =
+      "<b>Waa ku mahadsan tahay!</b><br><code>Tusaale:</code> jawaab markdown + copy ✔";
+  },1200);
 };
 </script>
 </body>
