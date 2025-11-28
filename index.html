@@ -132,3 +132,42 @@
   </script>
 </body>
 </html>
+<script>
+  const msgs = document.getElementById("messages");
+  const input = document.getElementById("userInput");
+
+  function addMessage(text, from){
+    const b = document.createElement("div");
+    b.className = "bubble " + (from === "user" ? "from-user" : "from-ai");
+    b.textContent = text;
+    msgs.appendChild(b);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function reply(text){
+    const t = (text || "").toLowerCase().trim();
+
+    if (/(haye|hello|salaan)/.test(t)) return "Haye! Sidee tahay maanta?";
+    if (/ii\s*waran|sidee\s*tahay/.test(t)) return "Wanaagsan, adiguna sidee tahay?";
+    if (/fahmay|fahamtay/.test(t)) return "Haa, waan fahmay fariintaada oo waan ka jawaabay.";
+    if (/yaa\s*sameey|yuu\s*sameeyay/.test(t)) return "MoktarAI waxaa la sameeyay si uu u caawiyo dadka Soomaaliyeed.";
+    if (/maxaa\s*loo\s*sameeyay/.test(t)) return "Waxaa lagu sameeyay in la bixiyo caawimo degdeg ah oo af-Soomaali ah.";
+    if (/goormee|goormaa\s*la\s*sameeyay/.test(t)) return "MoktarAI waxaa la bilaabay 2025 si rasmi ah.";
+    if (/maxaa\s*qaban\s*kartaa/.test(t)) return "Waxaan kaa caawin karaa sharaxaad, qoraal, talooyin UI/UX, iyo jawaabo Somali‑friendly.";
+    if (/caawin|help|iga\s*caawi|maxaan\s*samayn/.test(t)) return "Waxaan kaa caawin karaa su’aalo, qoraal, ama mashruuc. Maxaad rabtaa in aan ka bilaabo?";
+    if (/1\.\s*yaa.*2\.\s*maxaa.*3\.\s*goormee.*4\.\s*maxaa/.test(t)) {
+      return "1. MoktarAI waxaa sameeyay Muqtaar.\n2. Waxaa lagu sameeyay in la caawiyo dadka Soomaaliyeed.\n3. Waxaa la bilaabay 2025.\n4. Wuxuu qaban karaa sharaxaad, qoraal, iyo jawaabo Somali‑friendly.";
+    }
+
+    if (t.length < 4) return "Fariintaada waa gaaban tahay. Ma ii sharixi kartaa wax badan?";
+    return "Fariintaada waan helay. Waan ka shaqeynayaa jawaab sax ah...";
+  }
+
+  document.getElementById("btn-send").onclick = () => {
+    const text = input.value.trim();
+    if (!text) return;
+    addMessage(text, "user");
+    input.value = "";
+    setTimeout(()=>addMessage(reply(text), "ai"), 300);
+  };
+</script>
