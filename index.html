@@ -6,58 +6,90 @@
   <title>MoktarAI</title>
   <link rel="icon" href="assets/logo.png" />
   <style>
-    /* ... (CSS styles same as previous full layout) ... */
+    body { margin:0; font-family:Inter, sans-serif; background:#202123; color:#E6E6E6; }
+    .app { display:flex; height:100vh; }
+    .sidebar { width:260px; background:#141619; padding:18px; display:flex; flex-direction:column; justify-content:space-between; }
+    .logo { width:120px; margin-bottom:12px; }
+    .menu button { background:transparent; border:none; color:#fff; padding:10px; text-align:left; cursor:pointer; border-radius:8px; }
+    .menu button:hover { background:#1e1f20; }
+    .account-panel { text-align:center; font-size:14px; color:#aaa; }
+    .account-panel img { width:48px; border-radius:50%; margin-bottom:6px; }
+    .main { flex:1; display:flex; flex-direction:column; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-bottom:1px solid #333; }
+    .messages { flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
+    .bubble { max-width:72%; padding:12px 14px; border-radius:12px; line-height:1.5; }
+    .from-user { background:#2D8CFF; color:#fff; align-self:flex-end; }
+    .from-ai { background:#2E2E2E; color:#E6E6E6; align-self:flex-start; }
+    .footer { display:flex; align-items:center; gap:8px; padding:12px; border-top:1px solid #333; }
+    .input { flex:1; padding:10px; border-radius:8px; border:1px solid #333; background:#121213; color:#fff; }
+    .btn { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
+    .btn-send { background:#2D8CFF; color:#fff; }
+    .btn-voice { background:#28a745; color:#fff; }
+    .btn-plus { background:#FFD43B; color:#000; }
   </style>
 </head>
 <body>
-  <!-- ... (HTML layout: sidebar, topbar, messages, footer, modals) ... -->
-
+  <div class="app">
+    <aside class="sidebar">
+      <img src="assets/logo.png" alt="MoktarAI Logo" class="logo" />
+      <div class="menu">
+        <button>➕ Bog Cusub</button>
+        <button>📚 Maktabadda</button>
+        <button>📂 Mashruuca</button>
+        <button>💬 Wada sheekaysiga</button>
+      </div>
+      <div class="account-panel">
+        <img src="assets/avatar.png" />
+        <div>Abdirizak Hero<br><span>@naaifow17</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <strong>MoktarAI</strong>
+        <div>
+          <button id="btn-share">🔗 Share</button>
+          <button id="btn-three">⋮</button>
+        </div>
+      </div>
+      <div class="messages" id="messages"></div>
+      <div class="footer">
+        <button class="btn btn-plus" id="btn-plus">+</button>
+        <input type="text" id="userInput" class="input" placeholder="Qor fariintaada halkan..." />
+        <button class="btn btn-voice" id="btn-voice">🎤</button>
+        <button class="btn btn-send" id="btn-send">Dir</button>
+      </div>
+    </main>
+  </div>
   <script>
     function addMessage(text, from){
-      const wrap = document.getElementById("messages");
-      const b = document.createElement("div");
-      b.className = "bubble " + (from === "user" ? "from-user" : "from-ai");
-      b.textContent = text;
+      const wrap=document.getElementById("messages");
+      const b=document.createElement("div");
+      b.className="bubble "+(from==="user"?"from-user":"from-ai");
+      b.textContent=text;
       wrap.appendChild(b);
-      wrap.scrollTop = wrap.scrollHeight;
+      wrap.scrollTop=wrap.scrollHeight;
     }
-
     function getSmartReply(text){
-      const t = text.toLowerCase().trim();
-      if (/(haye|hye|hello)/.test(t)) return "Haye! Sidee tahay maanta?";
-      if (/ii\s*waran/.test(t)) return "Wanaagsan, adiguna sidee tahay?";
-      if (/fahmay|fahamtay/.test(t)) return "Haa, waan fahmay oo waan ka jawaabay.";
-      if (/yaasameey/.test(t)) return "MoktarAI waxaa la sameeyay si uu u caawiyo dadka Soomaaliyeed.";
-      if (/goormaa/.test(t)) return "MoktarAI waxaa la bilaabay 2025 si rasmi ah.";
-      if (/caawin|help/.test(t)) return "Waxaan kaa caawin karaa sharaxaad, qoraal, iyo talooyin.";
+      const t=text.toLowerCase();
+      if(t.includes("haye")) return "Haye! Sidee tahay maanta?";
+      if(t.includes("ii waran")) return "Wanaagsan, adiguna sidee tahay?";
+      if(t.includes("fahmay")) return "Haa, waan fahmay oo waan ka jawaabay.";
+      if(t.includes("yaasameey")) return "MoktarAI waxaa la sameeyay si uu u caawiyo dadka Soomaaliyeed.";
+      if(t.includes("goormaa")) return "MoktarAI waxaa la bilaabay 2025 si rasmi ah.";
       return "Waan kuu diyaar ahay. Maxaan kaa caawin karaa?";
     }
-
-    document.getElementById("btn-send").onclick = () => {
-      const text = document.getElementById("userInput").value.trim();
-      if (!text) return;
-      addMessage(text, "user");
-      setTimeout(() => addMessage(getSmartReply(text), "ai"), 400);
-      document.getElementById("userInput").value = "";
+    document.getElementById("btn-send").onclick=()=>{
+      const text=document.getElementById("userInput").value.trim();
+      if(!text) return;
+      addMessage(text,"user");
+      setTimeout(()=>addMessage(getSmartReply(text),"ai"),400);
+      document.getElementById("userInput").value="";
     };
-
-    document.getElementById("btn-voice").onclick = () => {
-      addMessage("Cod galinta waa la hawlgeliyay (jilid).", "ai");
-    };
-
-    document.getElementById("btn-plus").onclick = () => {
-      addMessage("➕ Create / Search / Add Image (demo)", "ai");
-    };
-
-    document.getElementById("btn-share").onclick = () => {
-      addMessage("🔗 Share: Copy link, WhatsApp, TikTok, PDF export (demo)", "ai");
-    };
-
-    document.getElementById("btn-three").onclick = () => {
-      addMessage("⋮ Menu: Pin, Delete, Export, Settings (demo)", "ai");
-    };
-
-    addMessage("Ku soo dhawoow! Maxaan kaa caawin karaa maanta?", "ai");
+    document.getElementById("btn-voice").onclick=()=>addMessage("Cod galinta waa la hawlgeliyay (jilid).","ai");
+    document.getElementById("btn-plus").onclick=()=>addMessage("➕ Create / Search / Add Image (demo)","ai");
+    document.getElementById("btn-share").onclick=()=>addMessage("🔗 Share: Copy link, WhatsApp, TikTok, PDF export (demo)","ai");
+    document.getElementById("btn-three").onclick=()=>addMessage("⋮ Menu: Pin, Delete, Export, Settings (demo)","ai");
+    addMessage("Ku soo dhawoow! Maxaan kaa caawin karaa maanta?","ai");
   </script>
 </body>
 </html>
