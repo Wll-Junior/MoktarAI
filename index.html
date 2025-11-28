@@ -8,99 +8,164 @@
   <style>
     body{margin:0;font-family:Inter,Roboto,Arial,sans-serif;background:#121212;color:#E0E0E0}
     .app{display:flex;height:100vh}
-    .sidebar{width:260px;background:#1E1E1E;padding:16px;display:flex;flex-direction:column;justify-content:space-between}
-    .logo{width:44px;height:44px;border-radius:50%;border:2px solid #2D8CFF}
-    .menu button{background:transparent;border:none;color:inherit;padding:10px;text-align:left;cursor:pointer;border-radius:8px}
-    .menu button:hover{background:#2a2a2a}
+    .sidebar{width:280px;background:#1E1E1E;border-right:1px solid #333;display:flex;flex-direction:column;justify-content:space-between;padding:16px}
+    .sidebar-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .logo{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #2D8CFF}
+    .menu{display:grid;gap:6px}
+    .menu button{background:transparent;border:1px solid transparent;color:inherit;padding:10px;border-radius:8px;text-align:left;cursor:pointer}
+    .menu button:hover{border-color:#333;background:#262626}
+    .account{display:flex;align-items:center;gap:10px;border-top:1px solid #333;padding-top:12px}
+    .avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #444}
     .main{flex:1;display:flex;flex-direction:column}
     .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #333}
     .messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-    .bubble{max-width:72%;padding:12px 14px;border-radius:12px;line-height:1.5}
+    .bubble{max-width:72%;padding:12px 14px;border-radius:12px;line-height:1.55;box-shadow:0 2px 6px rgba(0,0,0,0.25);word-break:break-word}
     .from-user{align-self:flex-end;background:#2D8CFF;color:#fff}
     .from-ai{align-self:flex-start;background:#2E2E2E;color:#E0E0E0}
-    .footer{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center;padding:12px;border-top:1px solid #333}
+    .footer{display:grid;grid-template-columns:auto 1fr auto auto auto auto;gap:8px;align-items:center;padding:12px;border-top:1px solid #333}
     .btn{padding:8px 12px;border:none;border-radius:8px;cursor:pointer}
     .btn-plus{background:#FFD43B;color:#000}
+    .input{width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#171717;color:inherit}
     .btn-voice{background:#28a745;color:#fff}
     .btn-send{background:#2D8CFF;color:#fff}
-    .input{width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#171717;color:#fff}
+    .btn-stop{background:#E33;color:#fff}
+    .btn-regen{background:#FFD43B;color:#000}
   </style>
 </head>
 <body>
-  <div class="app">
+  <div class="app" id="app">
     <aside class="sidebar">
       <div>
-        <img src="assets/logo.png" class="logo" alt="Logo">
+        <div class="sidebar-header">
+          <img src="assets/logo.png" class="logo" alt="Logo">
+          <div class="app-name">MoktarAI</div>
+        </div>
         <div class="menu">
+          <button class="active">💬 Wada Sheekaysiga</button>
           <button>➕ Bog Cusub</button>
           <button>📚 Maktabadda</button>
           <button>📂 Mashruuca</button>
-          <button>💬 Wada Sheekaysiga</button>
+          <button>👥 Caawinta Kooxda</button>
+          <button>🔍 Raadi</button>
+          <button>✨ Abuur</button>
+          <button>🖼 Ku dar sawir</button>
+          <button>⚙️ Dejinta</button>
+          <button>❓ Caawimaad</button>
+          <button>👤 Profile</button>
+          <button>🚪 Ka Bax</button>
         </div>
       </div>
-      <div style="margin-top:auto">
-        <img src="assets/avatar.png" class="logo" alt="Avatar">
-        <div>Abdirizak Hero<br><span>@naaifow17</span></div>
+      <div class="account">
+        <img src="assets/avatar.png" class="avatar" alt="Avatar">
+        <div>
+          <div>Abdirizak Hero</div>
+          <div style="font-size:12px;opacity:.8">@naaifow17</div>
+        </div>
       </div>
     </aside>
 
     <main class="main">
       <div class="topbar">
-        <strong>Wada Sheekeysi AI</strong>
-        <div>
-          <button class="btn">🔗 Share</button>
-          <button class="btn">⋮</button>
+        <div style="font-weight:700">Wada Sheekeysi AI</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="btn-share">🔗 Share</button>
+          <button class="btn" id="btn-three">⋮</button>
         </div>
       </div>
+
       <div class="messages" id="messages"></div>
+
       <div class="footer">
         <button class="btn btn-plus" id="btn-plus">+</button>
         <input type="text" id="userInput" class="input" placeholder="Qor fariintaada halkan...">
         <button class="btn btn-voice" id="btn-voice">🎤 Hadal</button>
         <button class="btn btn-send" id="btn-send">Dir</button>
+        <button class="btn btn-stop" id="btn-stop">Jooji</button>
+        <button class="btn btn-regen" id="btn-regen">Dib u soo saar</button>
       </div>
     </main>
   </div>
 
   <script>
-    const msgs=document.getElementById("messages");
-    const input=document.getElementById("userInput");
+    const msgs = document.getElementById("messages");
+    const input = document.getElementById("userInput");
 
-    function addMessage(text,from){
-      const b=document.createElement("div");
-      b.className="bubble "+(from==="user"?"from-user":"from-ai");
-      b.textContent=text;
+    const memory = { lastIntent: null, turns: 0 };
+
+    function addMessage(text, from){
+      const b = document.createElement("div");
+      b.className = "bubble " + (from === "user" ? "from-user" : "from-ai");
+      b.textContent = text;
       msgs.appendChild(b);
-      msgs.scrollTop=msgs.scrollHeight;
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function detectIntent(t){
+      const rules = [
+        { id:"greet",   test:/(haye|hello|hola|bonjour|salaan|iska\s*waran|ad(i|iga)\s*see\s*tahay|yaawaaye|niyow)/ },
+        { id:"who",     test:/(yaa\s+ku\s*sameey|kumaa\s*tahay|yaad\s*tahay|war\s+kumaa\s*tahay)/ },
+        { id:"about",   test:/(maxaa\s*loo\s*sameeyay|maxaa\s*lagu\s*sameeyay|ujeeddo|purpose)/ },
+        { id:"when",    test:/(goormee|goormaa|markee\s+la\s*sameeyay)/ },
+        { id:"capab",   test:/(maxaa\s*qaban\s*kartaa|what\s*can\s*you\s*do|awaamiir|commands)/ },
+        { id:"confirm", test:/(m(a|i)\s*la\s*socotaa\s*su'?a(a|a)sh(e|ey)da|ma\s*fahamtay|fahmay)/ },
+        { id:"stop",    test:/(waxba\s*ha\s*iga\s*caawin|jooji|stop|iskee)/ },
+        { id:"multi4",  test:/1\.\s*yaa.*2\.\s*maxaa.*3\.\s*goormee.*4\.\s*maxaa/ }
+      ];
+      for (const r of rules){ if (r.test.test(t)) return r.id; }
+      return "other";
     }
 
     function reply(text){
-      const t=(text||"").toLowerCase().trim();
+      const t = (text||"").toLowerCase().trim();
+      const intent = detectIntent(t);
+      memory.turns++;
 
-      // Salaan iyo dareen
-      if(/haye|hello|salaan|adi\s*see\s*tahay|yaawaaye|niyow/.test(t)) return "Haa Moktar, waan fiicanahay! Adiguna sidee tahay?";
-      if(/waan\s*fiicanahay|saan\s*waaye|ani\s*wanaagsan\s*ahay/.test(t)) return "Waa wax lagu farxo! Ilaahey ha kuu barakeeyo.";
+      // Anti-repeat: if same intent repeats, vary response
+      const same = memory.lastIntent === intent;
+      memory.lastIntent = intent;
 
-      // Su'aalo badan
-      if(/1\.\s*yaa.*2\.\s*maxaa.*3\.\s*goormee.*4\.\s*maxaa/.test(t)){
-        return "1. MoktarAI waxaa sameeyay Muqtaar.\n2. Waxaa lagu sameeyay in la caawiyo dadka Soomaaliyeed.\n3. Waxaa la bilaabay 2025.\n4. Wuxuu qaban karaa sharaxaad, qoraal, iyo jawaabo Somali‑friendly.";
+      switch(intent){
+        case "greet":
+          return same ? "Waan joogaa, sidee dareenkaaga hadda?" : "Haa Moktar, waan fiicanahay! Adiguna see tahay?";
+        case "who":
+          return "MoktarAI ayaan ahay — Copilot‑style assistant Somali‑friendly, kaa caawiya qoraal, sharaxaad, iyo UI/UX.";
+        case "about":
+          return "Waxaa lagu sameeyay in uu bixiyo caawimo degdeg ah oo af‑Soomaali ah, UI nadiif ah, iyo jawaabo macquul ah.";
+        case "when":
+          return "MoktarAI waxaa la bilaabay si rasmi ah sanadka 2025.";
+        case "capab":
+          return "Waxaan sameyn karaa: sharaxaad, qoraal, talooyin UI/UX, snippets code, iyo prompts Somali/English.";
+        case "confirm":
+          return "Haa, waan la socdaa su’aashaada. Hadafkaagu maxay yahay si aan u siiyo jawaab toos ah?";
+        case "stop":
+          return "Ok, waan joojinayaa hadda. Marka aad diyaar noqoto, ii sheeg waxa aad rabto.";
+        case "multi4":
+          return "1) Sameeye: Muqtaar.\n2) Ujeeddo: Caawimo Somali‑friendly.\n3) Bilow: 2025.\n4) Qaban kara: qoraal, sharaxaad, UI/UX, snippets.";
+        case "other":
+          // If it's a short/unclear message, ask for clarification once; then suggest paths
+          if (t.length < 4) return "Fariintaadu gaaban tahay. Ma ii caddeyn kartaa waxa aad rabto?";
+          return same
+            ? "Hadalkaaga waan qabtay — bal ii sheeg nuxurka aad rabto si aan ugu socdo si toos ah."
+            : "Waan helay fariintaada. Sheeg ujeeddada: sharaxaad, code, ama UI/UX — midkee rabtaa?";
       }
-
-      // Caawimo
-      if(/caawi|maxaan\s*sameeyaa|iga\s*caawi/.test(t)) return "Waxaan kaa caawin karaa qoraal, sharaxaad, ama mashruuc. Maxaad rabtaa in aan ka bilaabo?";
-
-      // Default
-      if(t.length<4) return "Fariintaada waa gaaban tahay. Ma ii sharixi kartaa wax badan?";
-      return "Fariintaada waan helay, bal ii sharax wax badan si aan si fiican kuugu jawaabo.";
     }
 
-    document.getElementById("btn-send").onclick=()=>{
-      const text=input.value.trim();
-      if(!text) return;
+    function sendNow(){
+      const text = input.value.trim();
+      if (!text) return;
       addMessage(text,"user");
-      input.value="";
-      setTimeout(()=>addMessage(reply(text),"ai"),300);
-    };
+      input.value = "";
+      setTimeout(()=>addMessage(reply(text),"ai"), 250);
+    }
+
+    document.getElementById("btn-send").onclick = sendNow;
+    document.getElementById("btn-voice").onclick = ()=>addMessage("🎤 Cod (demo): ku qor ama ku sheeg fariintaada.","ai");
+    document.getElementById("btn-stop").onclick  = ()=>addMessage("Joojiyay jawaabta (demo).","ai");
+    document.getElementById("btn-regen").onclick = ()=>addMessage("Dib u soo saar (demo): jawaab kale.","ai");
+    document.getElementById("btn-plus").onclick  = ()=>addMessage("➕ Actions: ✨ Abuur / 🔍 Raadi / 🖼 Sawir (demo).","ai");
+
+    // Start message
+    addMessage("Ku soo dhawoow! Maxaan kaa caawin karaa maanta?","ai");
   </script>
 </body>
 </html>
