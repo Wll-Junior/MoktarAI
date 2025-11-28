@@ -1,7 +1,3 @@
-<!-- index.html - MoktarAI UI (Full button spec + message styles)
-     - Nuqul ka samee: Save as index.html and open in browser
-     - Comments in Somali explain each button: what it does, location, icon, on-click behavior.
--->
 <!doctype html>
 <html lang="so">
 <head>
@@ -28,6 +24,7 @@
   /* ============ GLOBAL ============ */
   html,body{height:100%;margin:0;background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);}
   .app{display:flex;height:100vh;align-items:stretch;}
+
   /* ============ SIDEBAR ============ */
   .sidebar{width:260px;background:var(--sidebar);border-right:1px solid var(--border);padding:18px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px}
   .brand{font-weight:700;font-size:20px;letter-spacing:0.4px}
@@ -50,8 +47,6 @@
   .bubble{max-width:72%;padding:12px 14px;border-radius:14px;word-break:break-word;line-height:1.45}
   .from-ai{background:var(--ai-bubble);color:var(--text-primary);align-self:flex-start}
   .from-user{background:var(--user-bubble);color:white;align-self:flex-end}
-  /* ============ fonts / sizes for messages ============ */
-  /* User/AI text: font, color, size as requested */
   .msg-text{font-family:var(--font-sans);font-size:15px}
   .msg-meta{font-size:12px;color:var(--text-muted);margin-top:6px}
 
@@ -59,7 +54,6 @@
   .footer{padding:14px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;background:linear-gradient(180deg, rgba(0,0,0,0.02), transparent)}
   textarea.input{flex:1;min-height:48px;resize:none;padding:10px;background:#121213;border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:15px}
   .footer .action-row{display:flex;gap:8px;align-items:center}
-
   .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
   .btn-send{background:var(--accent);color:#fff}
   .btn-voice{background:#28a745;color:#fff}
@@ -68,450 +62,76 @@
   .btn-copy{background:#808080;color:#fff}
   .btn-regenerate{background:var(--accent-2);color:#000}
 
-  /* ============ PANELS / MODALS ============ */
+  /* modals */
   .modal{position:fixed;display:none;z-index:60;padding:12px;border-radius:10px;background:var(--panel);border:1px solid var(--border);color:var(--text-primary);box-shadow:0 6px 18px rgba(0,0,0,0.6)}
   .modal.show{display:block}
-  .modal .title{font-weight:700;margin-bottom:8px}
-  .modal .row{margin-bottom:8px}
-  .modal .small{font-size:13px;color:var(--text-muted)}
-
-  /* position helpers */
   .modal.share{right:20px;top:74px;width:280px}
   .modal.three{right:70px;top:74px;width:180px}
   .modal.account{right:20px;top:84px;width:360px}
   .modal.settings{right:20px;top:84px;width:420px}
   .modal.help{right:20px;top:84px;width:380px}
-
-  /* ============ Account Panel inner layout ============ */
-  .account-row{display:flex;align-items:center;gap:12px}
-  .avatar{width:48px;height:48px;border-radius:8px;background:#333;display:flex;align-items:center;justify-content:center}
-  .field{display:flex;flex-direction:column;gap:6px}
-
-  /* small utilities */
-  .muted{color:var(--text-muted);font-size:13px}
   .divider{height:1px;background:var(--border);margin:8px 0}
-
-  /* responsive */
-  @media (max-width:900px){ .sidebar{width:64px} .sidebar .label{display:none} .main{padding-left:8px} }
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- ============ SIDEBAR ============ -->
-  <aside class="sidebar" aria-label="Sidebar - navigation">
+  <aside class="sidebar">
     <div class="brand">MoktarAI</div>
-
-    <nav class="menu" aria-label="Primary">
-      <!-- Button: New page
-           - Location: Sidebar (top)
-           - Icon: plus page SVG
-           - Action on click: opens 'Create New Page' modal with fields (title, template)
-           - Tooltip: NONE (no title attribute) -->
-      <button class="sb-btn" id="btn-newpage" data-name="New page">
-        <!-- icon -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span class="label">New page</span>
-      </button>
-
-      <!-- Button: Library
-           - Action: opens Library modal listing saved pages -->
-      <button class="sb-btn" id="btn-library" data-name="Library">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M3 12h18M3 18h18" stroke-width="2" stroke-linecap="round"/></svg>
-        <span class="label">Library</span>
-      </button>
-
-      <!-- Button: Project -->
-      <button class="sb-btn" id="btn-projects" data-name="Project">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-        <span class="label">Project</span>
-      </button>
-
-      <!-- Button: Conversations (user chats) -->
-      <button class="sb-btn" id="btn-convos" data-name="Conversations">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-width="2"/></svg>
-        <span class="label">Conversations</span>
-      </button>
+    <nav class="menu">
+      <button class="sb-btn" id="btn-newpage">➕ New page</button>
+      <button class="sb-btn" id="btn-library">📚 Library</button>
+      <button class="sb-btn" id="btn-projects">📂 Project</button>
+      <button class="sb-btn" id="btn-convos">💬 Conversations</button>
     </nav>
-
     <div style="margin-top:auto">
-      <!-- Account trigger (Profile picture area sits under the sidebar as requested) -->
-      <button class="sb-btn" id="btn-account" data-name="Account">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><circle cx="12" cy="7" r="4"/></svg>
-        <span class="label">Account</span>
-      </button>
+      <button class="sb-btn" id="btn-account">👤 Account</button>
     </div>
   </aside>
 
-  <!-- ============ MAIN ============ -->
-  <main class="main" role="main">
+  <main class="main">
     <div class="topbar">
       <div class="top-left">
         <div style="font-weight:700">MoktarAI</div>
         <div class="muted" style="margin-left:8px">— Wada sheekaysiga AI</div>
       </div>
-
       <div class="top-actions">
-        <!-- Share button (no tooltip)
-             - Icon: share
-             - On click: toggles share modal with options Copy Link, WhatsApp, X, Messenger, TikTok, LinkedIn, Reddit -->
         <div class="share-menu">
-          <button class="icon-btn" id="btn-share" data-name="Share">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" stroke-width="2"/><path d="M16 6l-4-4-4 4" stroke-width="2"/><path d="M12 2v14" stroke-width="2"/></svg>
-          </button>
-          <div class="modal share" id="modal-share" aria-hidden="true">
-            <div class="title">Share this page</div>
-            <div class="row"><button class="btn" id="share-copy">Copy Link</button></div>
-            <div class="row"><button class="btn">WhatsApp</button> <button class="btn">X</button></div>
-            <div class="row"><button class="btn">Messenger</button> <button class="btn">TikTok</button></div>
-            <div class="row"><button class="btn">LinkedIn</button> <button class="btn">Reddit</button></div>
-          </div>
+          <button class="icon-btn" id="btn-share">🔗 Share</button>
         </div>
-
-        <!-- Three dot menu
-             - Icon: three dots
-             - On click: toggles menu with Save, Report, Delete -->
         <div class="three-dot-menu">
-          <button class="icon-btn" id="btn-three" data-name="More">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-          </button>
-          <div class="modal three" id="modal-three" aria-hidden="true">
-            <div class="row"><button class="btn">Save</button></div>
-            <div class="row"><button class="btn">Report</button></div>
-            <div class="row"><button class="btn" id="three-delete">Delete</button></div>
-          </div>
+          <button class="icon-btn" id="btn-three">⋯</button>
         </div>
-
-        <!-- Account quick (also opens full Account Panel) -->
-        <button class="icon-btn" id="btn-account-top" data-name="Account top">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><circle cx="12" cy="7" r="3"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
-        </button>
+        <button class="icon-btn" id="btn-account-top">👤</button>
       </div>
     </div>
 
-    <!-- Messages -->
-    <section class="messages" id="messages" aria-live="polite">
-      <!-- initial AI message -->
-      <div class="bubble from-ai">
-        <div class="msg-text">Ku soo dhawoow Username! Maxaan ka caawin karaa maanta?</div>
-        <div class="msg-meta muted">MoktarAI • 0:00</div>
-      </div>
-    </section>
+    <div class="messages" id="messages"></div>
 
-    <!-- Footer Input with buttons
-         - Voice button (left of send)
-         - Send button
-         - Stop, Regenerate, Copy, Create, Search, Add Image
-         - Button names are not visible on hover (no title attribute) -->
     <div class="footer">
-      <textarea id="userInput" class="input" placeholder="Qor fariintaada halkan..."></textarea>
-
+      <textarea id="userInput" class="input" placeholder="Qor fariintaada..."></textarea>
       <div class="action-row">
-        <!-- Voice button -->
-        <button class="btn btn-voice" id="btn-voice" data-name="Voice (Start/Stop)">🎤</button>
-        <!-- Send -->
-        <button class="btn btn-send" id="btn-send" data-name="Send">Send</button>
-        <!-- Stop -->
-        <button class="btn btn-stop" id="btn-stop" data-name="Stop">Stop</button>
-        <!-- Regenerate -->
-        <button class="btn btn-regenerate" id="btn-regenerate" data-name="Regenerate">Regenerate</button>
-        <!-- Copy -->
-        <button class="btn btn-copy" id="btn-copy" data-name="Copy last AI">Copy</button>
-        <!-- Create (plus) -->
-        <button class="btn btn-create" id="btn-create" data-name="Create">Create</button>
-        <!-- Search -->
-        <button class="btn" id="btn-search" data-name="Search">Search</button>
-        <!-- Add Image -->
-        <button class="btn" id="btn-add-image" data-name="Add Image">Add Image</button>
+        <button class="btn btn-send" id="btn-send">Send</button>
+        <button class="btn btn-voice" id="btn-voice">Voice</button>
+        <button class="btn btn-stop" id="btn-stop">Stop</button>
+        <button class="btn btn-create" id="btn-create">Create</button>
+        <button class="btn btn-copy" id="btn-copy">Copy</button>
+        <button class="btn btn-regenerate" id="btn-regenerate">Regenerate</button>
       </div>
     </div>
   </main>
 </div>
 
-<!-- ============ MODALS: Account, Settings, Help, Create New Page ============ -->
-<div class="modal account" id="modal-account" aria-hidden="true">
-  <div class="title">Account</div>
-  <div class="account-row">
-    <div class="avatar" id="acc-avatar">U</div>
-    <div style="flex:1">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-weight:700">Username</div>
-          <div class="muted">user@example.com</div>
-        </div>
-        <div>
-          <button class="btn" id="btn-edit-profile">Profile</button>
-          <button class="btn" id="btn-settings">Settings</button>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn" id="btn-logout">Logout</button>
-        <button class="btn" id="btn-delete-account" style="background:#4a1f1f;color:#fff">Delete account</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal settings" id="modal-settings" aria-hidden="true">
-  <div class="title">Settings</div>
-
-  <!-- Sections: General, Data Control, Parental, Account -->
-  <div class="row"><strong>1. General</strong></div>
-  <div class="row small">Theme:
-    <select id="setting-theme"><option value="dark">Dark</option><option value="light">Light</option></select>
-    Accent:
-    <select id="setting-accent"><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="pink">Pink</option><option value="green">Green</option></select>
-  </div>
-  <div class="row small">Language:
-    <select id="setting-lang">
-      <option value="so">Somali</option>
-      <option value="en">English</option>
-      <option value="ar">Arabic</option>
-      <!-- add many languages as needed -->
-    </select>
-  </div>
-  <div class="row small">Voice model:
-    <select id="setting-voice"><option value="male">Male</option><option value="female">Female</option></select>
-    <div class="muted">Choose and test voice here.</div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="row"><strong>2. Data control</strong></div>
-  <div class="row small">
-    <button class="btn" id="btn-view-sessions">View saved conversations</button>
-    <button class="btn" id="btn-delete-sessions">Delete all conversations</button>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="row"><strong>3. Parental controls</strong></div>
-  <div class="row small">Manage family accounts, invite member, set limits.</div>
-  <div class="row small">
-    <button class="btn" id="btn-invite-family">Invite family member</button>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="row"><strong>4. Account</strong></div>
-  <div class="row small">
-    <button class="btn" id="btn-delete-account-2">Delete account</button>
-  </div>
-</div>
-
-<div class="modal help" id="modal-help" aria-hidden="true">
-  <div class="title">Help & Contact</div>
-  <div class="row">Welcome to MoktarAI help center.</div>
-  <div class="row small">Contact: <a href="mailto:Muqtaarjunior31@gmail.com" style="color:var(--accent)">Muqtaarjunior31@gmail.com</a></div>
-  <div class="row small">Phone: +252615189548</div>
-  <div class="row"><button class="btn">Report a bug</button> <button class="btn">Download app (coming soon)</button></div>
-  <div class="row small">Shortcuts: Ctrl+K search, Ctrl+Enter send</div>
-</div>
-
-<!-- Create page modal (opened by New page or Create button) -->
+<!-- Create page modal -->
 <div class="modal" id="modal-create" style="right:20px;top:140px;width:360px">
   <div class="title">Create new page</div>
   <div class="row"><input id="newpage-title" placeholder="Page title" style="width:100%;padding:8px;border-radius:6px;border:1px solid var(--border);background:#111"/></div>
-  <div class="row"><button class="btn" id="do-create">Create</button></div>
-</div>
-
-<!-- ============ SCRIPTS ============ -->
-<script>
-  /* Utility: toggle modal by id */
-  function toggleModal(id){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.classList.toggle('show');
-    el.setAttribute('aria-hidden', !el.classList.contains('show'));
-  }
-
-  /* ============ BUTTON ACTIONS (What each does) ============
-     For every button we include:
-      - data-name attribute (button name) [NOT shown on hover]
-      - click handler which opens relevant modal or performs action
-      - Comments below explain each button's behavior (in Somali)
-  */
-
-  // Sidebar buttons
-  document.getElementById('btn-newpage').addEventListener('click', ()=> {
-    // New page: opens create modal where user enters page title -> creates a "page" in UI
-    toggleModal('modal-create');
-  });
-  document.getElementById('btn-library').addEventListener('click', ()=> {
-    // Library: open settings modal as placeholder (could be a library modal)
-    alert('Library: liistada pages - (simulated)');
-  });
-  document.getElementById('btn-projects').addEventListener('click', ()=> {
-    alert('Projects: Maareynta mashruuca (simulated)');
-  });
-  document.getElementById('btn-convos').addEventListener('click', ()=> {
-    alert('Conversations: Liiska wada sheekaysiga (simulated)');
-  });
-
-  // Topbar actions
-  document.getElementById('btn-share').addEventListener('click', ()=> toggleModal('modal-share'));
-  document.getElementById('btn-three').addEventListener('click', ()=> toggleModal('modal-three'));
-  document.getElementById('btn-account-top').addEventListener('click', ()=> toggleModal('modal-account'));
-  document.getElementById('btn-account').addEventListener('click', ()=> toggleModal('modal-account'));
-
-  // Account panel actions (Profile, Settings, Logout)
-  document.getElementById('btn-edit-profile').addEventListener('click', ()=> {
-    // profile: allows change avatar / display name / username
-    const newName = prompt('Change display name (example):', 'Username');
-    if(newName) alert('Display name saved: ' + newName);
-  });
-  document.getElementById('btn-settings').addEventListener('click', ()=> {
-    toggleModal('modal-settings');
-  });
-  document.getElementById('btn-logout').addEventListener('click', ()=> {
-    if(confirm('Ma hubtaa inaad dooneyso inaad ka baxdid?')) {
-      alert('Waxaad ka baxday MoktarAI (simulated).');
-    }
-  });
-  document.getElementById('btn-delete-account').addEventListener('click', ()=> {
-    if(confirm('Ma hubtaa inaad tirtireysid account-ka? Tani waa joogto.')) alert('Account deleted (simulated)');
-  });
-
-  // Help
-  // (You can wire help to top three-dot or a dedicated Help button)
-  // Example: open help modal when double-clicking brand
-  document.querySelector('.brand').addEventListener('dblclick', ()=> toggleModal('modal-help'));
-
-  // Footer buttons (send/voice/stop/regenerate/copy/create/search/add-image)
-  const messagesEl = document.getElementById('messages');
-  const userInput = document.getElementById('userInput');
-
-  document.getElementById('btn-voice').addEventListener('click', ()=> {
-    // Voice: start voice input (simulated)
-    appendAIMessage('Voice input activated (simulation).');
-  });
-
-  document.getElementById('btn-send').addEventListener('click', sendMessage);
-  userInput.addEventListener('keydown', (e)=> {
-    if(e.key === 'Enter' && (e.ctrlKey||e.metaKey)) sendMessage(); // Ctrl+Enter to send
-  });
-
-  function sendMessage(){
-    const text = userInput.value.trim();
-    if(!text) return;
-    appendUserMessage(text);
-    userInput.value = '';
-
-    // Simulated AI response — replace this block with fetch('/ask') to call backend
-    appendAIMessage('AI waa soo diyaar, fadlan sug...');
-
-    // Example: simulate a short response after 700ms
-    setTimeout(()=> {
-      // update last AI placeholder
-      const aiLast = document.querySelectorAll('.from-ai .msg-text');
-      aiLast[aiLast.length-1].textContent = 'Jawaabtaada: ' + text.slice(0,120);
-    },700);
-  }
-
-  document.getElementById('btn-stop').addEventListener('click', ()=> {
-    appendAIMessage('Stop requested (simulation).');
-  });
-  document.getElementById('btn-regenerate').addEventListener('click', ()=> {
-    appendAIMessage('Regenerate (last response re-run) - simulated');
-  });
-  document.getElementById('btn-copy').addEventListener('click', ()=> {
-    // Copy last AI message text
-    const ais = document.querySelectorAll('.from-ai .msg-text');
-    if(ais.length===0) return alert('No AI message to copy');
-    const last = ais[ais.length-1].textContent;
-    navigator.clipboard?.writeText(last).then(()=> alert('AI message copied'));
-  });
-  document.getElementById('btn-create').addEventListener('click', ()=> toggleModal('modal-create'));
-  document.getElementById('btn-search').addEventListener('click', ()=> {
-    const q = prompt('Search (simulated):');
-    if(q) appendAIMessage('Search results for: '+q);
-  });
-  document.getElementById('btn-add-image').addEventListener('click', ()=> {
-    appendAIMessage('Add image invoked (simulation). Use Create > Image in future.');
-  });
-
-  // Create new page action
-  document.getElementById('do-create').addEventListener('click', ()=>{
-    const title = document.getElementById('newpage-title').value || 'Untitled';
-    toggleModal('modal-create');
-    appendAIMessage('New page created: ' + title);
-  });
-
-  // Share copy link
-  document.getElementById('share-copy').addEventListener('click', ()=>{
-    const url = window.location.href;
-    navigator.clipboard?.writeText(url).then(()=> alert('Link copied: ' + url));
-  });
-
-  // Three-dot delete
-  document.getElementById('three-delete').addEventListener('click', ()=> {
-    if(confirm('Tirtir page-kan?')) appendAIMessage('Page deleted (simulated)');
-  });
-
-  // Helper: Append user message to chat
-  function appendUserMessage(text){
-    const node = document.createElement('div');
-    node.className = 'bubble from-user';
-    node.innerHTML = `<div class="msg-text">${escapeHtml(text)}</div><div class="msg-meta muted">You • now</div>`;
-    messagesEl.appendChild(node);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  // Helper: Append AI message to chat
-  function appendAIMessage(text){
-    const node = document.createElement('div');
-    node.className = 'bubble from-ai';
-    node.innerHTML = `<div class="msg-text">${escapeHtml(text)}</div><div class="msg-meta muted">MoktarAI • now</div>`;
-    messagesEl.appendChild(node);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  // Small utility to escape HTML
-  function escapeHtml(s){ return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-  /* ============ NOTES: What each button DOES (concise) ============
-     - Sidebar New page: opens Create modal -> creates a page (title)
-     - Sidebar Library: opens the library (simulated)
-     - Sidebar Project: opens projects area
-     - Sidebar Conversations: lists user conversations
-     - Account (sidebar & top): opens Account Panel with Profile / Settings / Help / Logout
-         * Profile: can change avatar, display name, username (simulated via prompt)
-         * Settings: opens Settings modal (General, Data control, Parental, Account)
-         * Help: contact details, bug report and shortcuts
-         * Logout: confirmation modal (browser confirm)
-     - Topbar Share: opens share modal listing Copy Link and socials
-     - Topbar 3-dot: opens menu (Save, Report, Delete)
-     - Footer Voice: starts voice (simulated)
-     - Footer Send: sends message (Ctrl+Enter also)
-     - Footer Stop: stops current AI response (simulated)
-     - Footer Regenerate: regenerates last response (simulated)
-     - Footer Copy: copies last AI message
-     - Footer Create: opens create page
-     - Footer Search: runs search simulation
-     - Footer Add Image: opens image creation simulation
-  =============================================================== */
-
-  // Close open modals when clicking outside
-  document.addEventListener('click', (e)=>{
-    const modalIds = ['modal-share','modal-three','modal-account','modal-settings','modal-help','modal-create'];
-    modalIds.forEach(id=>{
-      const el = document.getElementById(id);
-      if(!el) return;
-      if(!el.classList.contains('show')) return;
-      // if click is inside modal or the control button, keep it
-      if(el.contains(e.target)) return;
-      // if target is a button that toggles it, skip (we used specific handlers)
-      if(e.target.closest('[id^="btn-"]')) return;
-      // otherwise hide
-      el.classList.remove('show');
-      el.setAttribute('aria-hidden','true');
-    });
-  });
-
-  // Keyboard shortcut: Ctrl+K for search prompt
-  document.addEventListener('keydown', (e)=>{
-    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); const q = prompt('Quick search:'); if(q) appendAIMessage('Search: ' + q); }
-  });
-</script>
-</body>
-</html>
+  <div class="row small">Choose template:</div>
+  <div class="row">
+    <select id="newpage-template" style="width:100%;padding:8px;border-radius:6px;background:#111;border:1px solid var(--border)">
+      <option value="blank">Blank</option>
+      <option value="notes">Notes</option>
+      <option value="todo">To-do List</option>
+    </select>
+  </div>
+  <div class="divider"></div>
+  <div class="row"><button class="btn btn-create" id="newpage-create-btn">Create
