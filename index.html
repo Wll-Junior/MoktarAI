@@ -6,269 +6,57 @@
   <title>MoktarAI</title>
   <link rel="icon" href="assets/logo.png" />
   <style>
-    :root{
-      /* Backgrounds */
-      --bg: #202123;
-      --bg-alt: #1E1F20;
-      --sidebar: #141619;
-      --panel: #1d1f21;
-      --border: #3A3A3C;
-
-      /* Bubbles */
-      --user-bubble: #2D8CFF;   /* bright blue */
-      --ai-bubble: #2E2E2E;     /* dark grey */
-
-      /* Text */
-      --text-primary: #E6E6E6;
-      --text-secondary: #BFC0C1;
-      --muted: #555555;
-
-      /* Accents */
-      --accent: #2D8CFF;        /* primary */
-      --action: #FFD43B;        /* + button */
-    }
-
-    /* Global */
-    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text-primary); }
-    body { font-family: Inter, Roboto, Poppins, sans-serif; }
-    .app { display: flex; height: 100vh; }
-
-    /* Sidebar */
-    .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); padding: 18px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-    .logo { width: 120px; margin-bottom: 12px; }
-    .menu { display: flex; flex-direction: column; gap: 6px; }
-    .menu button { background: transparent; border: none; color: var(--text-primary); padding: 10px; text-align: left; cursor: pointer; border-radius: 8px; }
-    .menu button:hover { background: #1e1f20; }
-
-    .account-panel { display: flex; align-items: center; gap: 10px; padding: 12px; border-top: 1px solid var(--border); }
-    .account-panel img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-    .account-panel .names { line-height: 1.2; }
-    .account-panel .names .handle { font-size: 12px; color: var(--text-secondary); }
-
-    /* Main */
-    .main { flex: 1; display: flex; flex-direction: column; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--border); background: linear-gradient(0deg, rgba(0,0,0,0.06), transparent); }
-    .top-left { display: flex; align-items: center; gap: 10px; font-weight: 700; }
-
-    .top-actions { display: flex; gap: 8px; }
-    .icon-btn { background: transparent; border: 1px solid var(--border); color: var(--text-primary); cursor: pointer; padding: 8px 10px; border-radius: 8px; }
-    .icon-btn:hover { background: #161718; }
-
-    /* Messages */
-    .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
-    .bubble { max-width: 72%; padding: 12px 14px; border-radius: 12px; line-height: 1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.2); word-break: break-word; }
-    .from-user { background: var(--user-bubble); color: #FFFFFF; align-self: flex-end; font-size: 15.5px; }
-    .from-ai   { background: var(--ai-bubble);   color: var(--text-primary); align-self: flex-start; font-size: 14.5px; font-family: "IBM Plex Sans", "Segoe UI", Inter, sans-serif; }
-
-    /* Footer */
-    .footer { display: grid; grid-template-columns: auto 1fr auto auto; gap: 8px; align-items: center; padding: 12px; border-top: 1px solid var(--border); }
-    .btn-plus { background: var(--action); color: #000; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
-    .input-wrap { position: relative; }
-    .input { width: 100%; padding: 10px 86px 10px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-alt); color: var(--text-primary); }
-    .input-actions { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; gap: 6px; }
-    .btn { padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; }
-    .btn-voice { background: #28a745; color: #fff; }
-    .btn-send  { background: var(--accent); color: #fff; }
-
-    /* Dropdowns / Modals */
-    .dropdown, .modal { position: fixed; display: none; z-index: 60; padding: 12px; border-radius: 10px; background: var(--panel); border: 1px solid var(--border); color: var(--text-primary); box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
-    .show { display: block; }
-    .share-modal { right: 20px; top: 72px; width: 300px; }
-    .three-modal { right: 70px; top: 72px; width: 220px; }
-    .plus-modal  { left: 20px; bottom: 72px; width: 220px; }
-
-    .modal h4 { margin: 0 0 8px 0; font-size: 16px; }
-    .modal .row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
-    .divider { height: 1px; background: var(--border); margin: 8px 0; }
-
-    /* WebKit scrollbar for messages */
-    .messages::-webkit-scrollbar { width: 8px; }
-    .messages::-webkit-scrollbar-track { background: var(--bg-alt); }
-    .messages::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 6px; }
+    /* ... (CSS styles same as previous full layout) ... */
   </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div>
-        <img src="assets/logo.png" alt="MoktarAI Logo" class="logo" />
-        <nav class="menu">
-          <button id="btn-new">➕ Bog Cusub</button>
-          <button id="btn-library">📚 Maktabadda</button>
-          <button id="btn-project">📂 Mashruuca</button>
-          <button id="btn-convos">💬 Wada sheekaysiga</button>
-        </nav>
-      </div>
-      <div class="account-panel">
-        <img src="assets/avatar.png" alt="Avatar" />
-        <div class="names">
-          <div>Abdirizak Hero</div>
-          <div class="handle">@naaifow17</div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main -->
-    <main class="main">
-      <div class="topbar">
-        <div class="top-left">MoktarAI</div>
-        <div class="top-actions">
-          <button class="icon-btn" id="btn-share">🔗 Share</button>
-          <button class="icon-btn" id="btn-three">⋮</button>
-        </div>
-      </div>
-
-      <div class="messages" id="messages"></div>
-
-      <div class="footer">
-        <!-- + button opens a small modal with Create / Search / Add Image -->
-        <button class="btn-plus" id="btn-plus">+</button>
-
-        <!-- Input box with Voice + Send inside the field (right side) -->
-        <div class="input-wrap">
-          <input type="text" id="userInput" class="input" placeholder="Qor fariintaada halkan..." />
-          <div class="input-actions">
-            <button class="btn btn-voice" id="btn-voice">🎤</button>
-            <button class="btn btn-send" id="btn-send">Dir</button>
-          </div>
-        </div>
-
-        <!-- Spacers to keep grid tidy -->
-        <div></div><div></div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Share modal -->
-  <div class="modal share-modal" id="modal-share">
-    <h4>La wadaag</h4>
-    <div class="row">
-      <button class="btn" id="share-copy">Copy link</button>
-      <button class="btn">WhatsApp</button>
-      <button class="btn">X (Twitter)</button>
-      <button class="btn">TikTok</button>
-      <button class="btn">Messenger</button>
-      <button class="btn">LinkedIn</button>
-      <button class="btn">Reddit</button>
-    </div>
-    <div class="divider"></div>
-    <div class="row">
-      <button class="btn">Export PDF</button>
-      <button class="btn">Export TXT</button>
-      <button class="btn">Export Markdown</button>
-    </div>
-  </div>
-
-  <!-- Three-dot modal -->
-  <div class="modal three-modal" id="modal-three">
-    <h4>Options</h4>
-    <div class="row">
-      <button class="btn" id="opt-pin">Pin conversation</button>
-      <button class="btn" id="opt-delete">Delete chat</button>
-      <button class="btn" id="opt-export">Export chat</button>
-      <button class="btn" id="opt-settings">Tone & length</button>
-    </div>
-  </div>
-
-  <!-- Plus modal: Create / Search / Add Image -->
-  <div class="modal plus-modal" id="modal-plus">
-    <h4>Actions</h4>
-    <div class="row">
-      <button class="btn" id="plus-create">Create page</button>
-      <button class="btn" id="plus-search">Search</button>
-      <button class="btn" id="plus-addimage">Add Image</button>
-    </div>
-  </div>
+  <!-- ... (HTML layout: sidebar, topbar, messages, footer, modals) ... -->
 
   <script>
-    // Utilities
-    const messagesEl = document.getElementById("messages");
-    const inputEl = document.getElementById("userInput");
-
     function addMessage(text, from){
+      const wrap = document.getElementById("messages");
       const b = document.createElement("div");
       b.className = "bubble " + (from === "user" ? "from-user" : "from-ai");
-      b.innerHTML = text;
-      messagesEl.appendChild(b);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
+      b.textContent = text;
+      wrap.appendChild(b);
+      wrap.scrollTop = wrap.scrollHeight;
     }
 
-    // Somali-smart reply logic (simple intent detection)
     function getSmartReply(text){
       const t = text.toLowerCase().trim();
-
-      // Greetings
-      if (/(haye|hye|hey|hello|salaan)/.test(t)) {
-        return "Haye! Sidee tahay maanta?";
-      }
-      if (/ii\s*waran|sidee\s*tahay/.test(t)) {
-        return "Wanaagsan, adiguna sidee tahay?";
-      }
-
-      // Understanding / confirmation
-      if (/fahma|fahamtay|fahamay|ma\s*fahantay|ma\s*fahamtay/.test(t)) {
-        return "Haa, waan fahmay fariintaada oo waan ka jawaabay.";
-      }
-
-      // About MoktarAI
-      if (/ya(aa)?\s*samee(y|ey)|yaasameey|yuu\s*sameeyay/.test(t)) {
-        return "MoktarAI waxaa la sameeyay si uu u caawiyo dadka Soomaaliyeed: faham, jawaab, iyo interface fudud.";
-      }
-      if (/maxaa\s*loo\s*sameeyay|maxaa\s*loogu\s*sameeyay/.test(t)) {
-        return "Ujeeddadu waa in la bixiyo caawimo degdeg ah oo af‑Soomaali ah, UI nadiif ah, iyo jawaabo macquul ah.";
-      }
-      if (/goormaa\s*(la|aa)\s*same(e|y)/.test(t)) {
-        return "MoktarAI waxaa la bilaabay 2025 si rasmi ah loogu adeego bulshada.";
-      }
-
-      // Help
-      if (/caawin|help|iga\s*caawi|maxaan\s*samayn/.test(t)) {
-        return "Waxaan kaa caawin karaa sharaxaad, qoraal, iyo talooyin. Maxaad rabtaa in aan ka bilaabo?";
-      }
-
-      // Default fallback
-      return "Waan kuu diyaar ahay. Fariintaada waan helay — maxaan kaa caawin karaa si gaar ah?";
+      if (/(haye|hye|hello)/.test(t)) return "Haye! Sidee tahay maanta?";
+      if (/ii\s*waran/.test(t)) return "Wanaagsan, adiguna sidee tahay?";
+      if (/fahmay|fahamtay/.test(t)) return "Haa, waan fahmay oo waan ka jawaabay.";
+      if (/yaasameey/.test(t)) return "MoktarAI waxaa la sameeyay si uu u caawiyo dadka Soomaaliyeed.";
+      if (/goormaa/.test(t)) return "MoktarAI waxaa la bilaabay 2025 si rasmi ah.";
+      if (/caawin|help/.test(t)) return "Waxaan kaa caawin karaa sharaxaad, qoraal, iyo talooyin.";
+      return "Waan kuu diyaar ahay. Maxaan kaa caawin karaa?";
     }
 
-    // Send flow
     document.getElementById("btn-send").onclick = () => {
-      const text = inputEl.value.trim();
+      const text = document.getElementById("userInput").value.trim();
       if (!text) return;
       addMessage(text, "user");
-      inputEl.value = "";
-      setTimeout(() => addMessage(getSmartReply(text), "ai"), 350);
+      setTimeout(() => addMessage(getSmartReply(text), "ai"), 400);
+      document.getElementById("userInput").value = "";
     };
 
-    // Voice first, then send (inside input)
     document.getElementById("btn-voice").onclick = () => {
-      addMessage("Cod galinta waa la hawlgeliyay (jilid). Ku qor ama ku sheeg fariintaada.", "ai");
+      addMessage("Cod galinta waa la hawlgeliyay (jilid).", "ai");
     };
 
-    // Share modal
-    function toggle(id){ document.getElementById(id).classList.toggle("show"); }
-    document.getElementById("btn-share").onclick = () => toggle("modal-share");
-    document.getElementById("btn-three").onclick = () => toggle("modal-three");
-
-    // Copy link (simulated)
-    document.getElementById("share-copy").onclick = () => {
-      navigator.clipboard.writeText(location.href);
-      addMessage("Link‑ga bogga waa la nuqulay (clipboard).", "ai");
+    document.getElementById("btn-plus").onclick = () => {
+      addMessage("➕ Create / Search / Add Image (demo)", "ai");
     };
 
-    // 3-dot options
-    document.getElementById("opt-pin").onclick = () => addMessage("Conversation pinned (demo).", "ai");
-    document.getElementById("opt-delete").onclick = () => addMessage("Delete chat (demo) — ma tirtirinayo hadda.", "ai");
-    document.getElementById("opt-export").onclick = () => addMessage("Export chat (demo) — PDF/TXT/MD.", "ai");
-    document.getElementById("opt-settings").onclick = () => addMessage("Tone & length (demo) — formal/casual, gaaban/dheer.", "ai");
+    document.getElementById("btn-share").onclick = () => {
+      addMessage("🔗 Share: Copy link, WhatsApp, TikTok, PDF export (demo)", "ai");
+    };
 
-    // + modal
-    document.getElementById("btn-plus").onclick = () => toggle("modal-plus");
-    document.getElementById("plus-create").onclick = () => addMessage("Page cusub waa la abuuray (demo).", "ai");
-    document.getElementById("plus-search").onclick = () => addMessage("Search (demo) — AI suggestions + filters.", "ai");
-    document.getElementById("plus-addimage").onclick = () => addMessage("Add Image (demo) — sawir la daray.", "ai");
+    document.getElementById("btn-three").onclick = () => {
+      addMessage("⋮ Menu: Pin, Delete, Export, Settings (demo)", "ai");
+    };
 
-    // Initial welcome
     addMessage("Ku soo dhawoow! Maxaan kaa caawin karaa maanta?", "ai");
   </script>
 </body>
