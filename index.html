@@ -169,3 +169,43 @@
   </script>
 </body>
 </html>
+<script>
+  const msgs=document.getElementById("messages");
+  const input=document.getElementById("userInput");
+
+  function addMessage(text,from){
+    const b=document.createElement("div");
+    b.className="bubble "+(from==="user"?"from-user":"from-ai");
+    b.textContent=text;
+    msgs.appendChild(b);
+    msgs.scrollTop=msgs.scrollHeight;
+  }
+
+  function reply(text){
+    const t=(text||"").toLowerCase().trim();
+
+    // Salaan
+    if(/haye|hello|salaan|saaxiib/.test(t)) return "Haa Moktar, waan fiicanahay! Adiguna sidee tahay?";
+    if(/waan\s*fiicanahay/.test(t)) return "Waa wax lagu farxo! Ilaahey ha kuu barakeeyo.";
+
+    // Su'aalaha muhiimka ah
+    if(/yaa\s*ku\s*sameey|adi\s*yaa\s*ku\s*sameey|kumaa\s*sameeyay/.test(t))
+      return "MoktarAI waxaa sameeyay Muqtaar si uu u caawiyo dadka Soomaaliyeed.";
+    if(/magacaa|magacaa\s*maxay\s*tahay/.test(t))
+      return "Magacaygu waa MoktarAI, Copilot‑style assistant Somali‑friendly.";
+    if(/goormee\s*lagu\s*sameey|markee\s*la\s*sameeyay/.test(t))
+      return "MoktarAI waxaa la bilaabay sanadka 2025.";
+
+    // Default
+    if(t.length<4) return "Fariintaadu gaaban tahay. Ma ii sharixi kartaa wax badan?";
+    return "Waan helay fariintaada. Bal ii sheeg waxa aad rabto si aan si fiican kuugu jawaabo.";
+  }
+
+  document.getElementById("btn-send").onclick=()=>{
+    const text=input.value.trim();
+    if(!text) return;
+    addMessage(text,"user");
+    input.value="";
+    setTimeout(()=>addMessage(reply(text),"ai"),300);
+  };
+</script>
