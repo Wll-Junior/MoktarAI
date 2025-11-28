@@ -1,0 +1,27 @@
+﻿{
+  "name": "MoktarAI",
+  "theme": "dark",
+  "locale": "so",
+  "colors": {
+    "bg": "#121212",
+    "sidebar": "#1E1E1E",
+    "text": "#E0E0E0",
+    "accent": "#2D8CFF",
+    "aiBubble": "#2E2E2E",
+    "plus": "#FFD43B",
+    "voice": "#28a745",
+    "send": "#2D8CFF",
+    "border": "#333",
+    "grayBtn": "#222"
+  },
+  "features": {
+    "collapsibleSidebar": true,
+    "themeToggle": true,
+    "share": true,
+    "threeDot": true,
+    "voice": true,
+    "stop": true,
+    "regenerate": true,
+    "shortcuts": true
+  }
+}
