@@ -6,89 +6,216 @@
   <title>MoktarAI</title>
   <link rel="icon" href="assets/logo.png" />
   <style>
-    body { margin:0; font-family:Inter, sans-serif; background:#202123; color:#E6E6E6; }
-    .app { display:flex; height:100vh; }
-    .sidebar { width:260px; background:#141619; padding:18px; display:flex; flex-direction:column; justify-content:space-between; }
-    .logo { width:120px; margin-bottom:12px; }
-    .menu button { background:transparent; border:none; color:#fff; padding:10px; text-align:left; cursor:pointer; border-radius:8px; }
-    .menu button:hover { background:#1e1f20; }
-    .account-panel { text-align:center; font-size:14px; color:#aaa; }
-    .account-panel img { width:48px; border-radius:50%; margin-bottom:6px; }
-    .main { flex:1; display:flex; flex-direction:column; }
-    .topbar { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-bottom:1px solid #333; }
-    .messages { flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
-    .bubble { max-width:72%; padding:12px 14px; border-radius:12px; line-height:1.5; }
-    .from-user { background:#2D8CFF; color:#fff; align-self:flex-end; }
-    .from-ai { background:#2E2E2E; color:#E6E6E6; align-self:flex-start; }
-    .footer { display:flex; align-items:center; gap:8px; padding:12px; border-top:1px solid #333; }
-    .input { flex:1; padding:10px; border-radius:8px; border:1px solid #333; background:#121213; color:#fff; }
-    .btn { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
-    .btn-send { background:#2D8CFF; color:#fff; }
-    .btn-voice { background:#28a745; color:#fff; }
-    .btn-plus { background:#FFD43B; color:#000; }
+    :root{
+      --bg-dark:#121212; --sidebar-dark:#1E1E1E; --text-dark:#E0E0E0;
+      --bg-light:#FFFFFF; --sidebar-light:#F7F7F7; --text-light:#000000;
+      --border:#333; --accent:#2D8CFF; --ai:#2E2E2E; --yellow:#FFD43B; --green:#28a745; --red:#e33; --gray:#888;
+    }
+    body{margin:0;font-family:Inter,Roboto,Arial,sans-serif;background:var(--bg-dark);color:var(--text-dark);}
+    .theme-light body, .theme-light{background:var(--bg-light);color:var(--text-light);}
+    .app{display:flex;height:100vh;}
+    /* Sidebar */
+    .sidebar{width:280px;background:var(--sidebar-dark);color:var(--text-dark);border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between;padding:16px;box-sizing:border-box}
+    .theme-light .sidebar{background:var(--sidebar-light);border-color:#ddd;color:#000}
+    .sidebar-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .logo{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)} /* circle logo */
+    .app-name{font-weight:700}
+    .menu{display:grid;gap:6px}
+    .menu button{background:transparent;border:1px solid transparent;color:inherit;padding:10px;border-radius:8px;text-align:left;cursor:pointer}
+    .menu button:hover{border-color:var(--border);background:rgba(255,255,255,0.06)}
+    .menu .active{background:rgba(45,140,255,0.14);border-color:#2d8cff33}
+    .collapse-toggle{margin:8px 0;display:flex;gap:8px}
+    /* Account panel */
+    .account{display:flex;align-items:center;gap:10px;border-top:1px solid var(--border);padding-top:12px}
+    .avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #444}
+    .acc-names{line-height:1.2}
+    .handle{font-size:12px;opacity:.8}
+    /* Main */
+    .main{flex:1;display:flex;flex-direction:column}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border)}
+    .chat-title{font-weight:700}
+    .top-actions{display:flex;gap:8px}
+    .icon-btn{background:transparent;border:1px solid #444;color:inherit;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .icon-btn:hover{background:rgba(255,255,255,0.06)}
+    /* Messages */
+    .messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+    .bubble{max-width:72%;padding:12px 14px;border-radius:12px;line-height:1.55;box-shadow:0 2px 6px rgba(0,0,0,0.25);word-break:break-word}
+    .from-user{align-self:flex-end;background:var(--accent);color:#fff}
+    .from-ai{align-self:flex-start;background:var(--ai);color:#E0E0E0}
+    /* Footer */
+    .footer{display:grid;grid-template-columns:auto 1fr auto auto auto auto;gap:8px;align-items:center;padding:12px;border-top:1px solid var(--border)}
+    .btn{padding:8px 12px;border:none;border-radius:8px;cursor:pointer}
+    .btn-send{background:var(--accent);color:#fff}      /* Dir → Blue */
+    .btn-voice{background:var(--green);color:#fff}      /* Voice → Green */
+    .btn-stop{background:var(--red);color:#fff}         /* Stop → Red */
+    .btn-regen{background:var(--yellow);color:#000}     /* Regenerate → Yellow */
+    .btn-gray{background:#222;color:#ddd}               /* Share / 3-dot → Gray */
+    .input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:#171717;color:inherit}
+    .theme-light .input{background:#fff;border-color:#ddd;color:#000}
+    .btn-plus{background:var(--yellow);color:#000}      /* + → Yellow */
+    /* Collapsible */
+    .collapsed .sidebar{width:64px}
+    .collapsed .menu button{font-size:0;line-height:0;padding:10px}
+    .collapsed .menu button::before{font-size:16px;line-height:1}
+    /* Theme toggle */
+    .theme-toggle{background:#222;color:#ddd;border:1px solid #444;border-radius:8px;padding:8px;cursor:pointer}
   </style>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <img src="assets/logo.png" alt="MoktarAI Logo" class="logo" />
-      <div class="menu">
-        <button>➕ Bog Cusub</button>
-        <button>📚 Maktabadda</button>
-        <button>📂 Mashruuca</button>
-        <button>💬 Wada sheekaysiga</button>
-      </div>
-      <div class="account-panel">
-        <img src="assets/avatar.png" />
-        <div>Abdirizak Hero<br><span>@naaifow17</span></div>
-      </div>
-    </aside>
-    <main class="main">
-      <div class="topbar">
-        <strong>MoktarAI</strong>
-        <div>
-          <button id="btn-share">🔗 Share</button>
-          <button id="btn-three">⋮</button>
+  <div class="app" id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div>
+        <div class="sidebar-header">
+          <img src="assets/logo.png" alt="Logo" class="logo"/>
+          <div class="app-name">MoktarAI</div>
+        </div>
+        <div class="menu" id="menu">
+          <button class="active">✨ ChatGPT / MoktarAI</button>
+          <button id="btn-new">➕ Bog Cusub</button>
+          <button id="btn-library">📚 Maktabadda</button>
+          <button id="btn-project">📂 Mashruuca</button>
+          <button id="btn-convos">💬 Wada Sheekaysiga</button>
+          <button id="btn-team">👥 Caawinta Kooxda</button>
+          <button id="btn-search">🔍 Raadi</button>
+          <button id="btn-create">✨ Abuur</button>
+          <button id="btn-addimg">🖼 Ku dar sawir</button>
+          <button id="btn-settings">⚙️ Dejinta</button>
+          <button id="btn-help">❓ Caawimaad</button>
+          <button id="btn-profile">👤 Profile</button>
+          <button id="btn-logout">🚪 Ka Bax</button>
+        </div>
+        <div class="collapse-toggle">
+          <button class="theme-toggle" id="btn-theme">🌙/☀️ Theme</button>
+          <button class="icon-btn" id="btn-collapse">⟨⟩</button>
         </div>
       </div>
+      <div class="account">
+        <img src="assets/avatar.png" class="avatar" alt="Avatar"/>
+        <div class="acc-names">
+          <div>Abdirizak Hero</div>
+          <div class="handle">@naaifow17</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="topbar">
+        <div class="chat-title">Wada Sheekeysi AI</div>
+        <div class="top-actions">
+          <button class="icon-btn btn-gray" id="btn-share">🔗 Share</button>
+          <button class="icon-btn btn-gray" id="btn-three">⋮</button>
+        </div>
+      </div>
+
       <div class="messages" id="messages"></div>
+
       <div class="footer">
         <button class="btn btn-plus" id="btn-plus">+</button>
         <input type="text" id="userInput" class="input" placeholder="Qor fariintaada halkan..." />
-        <button class="btn btn-voice" id="btn-voice">🎤</button>
+        <button class="btn btn-voice" id="btn-voice">🎤 Hadal</button>
         <button class="btn btn-send" id="btn-send">Dir</button>
+        <button class="btn btn-stop" id="btn-stop">Jooji</button>
+        <button class="btn btn-regen" id="btn-regen">Dib u soo saar</button>
       </div>
     </main>
   </div>
+
   <script>
+    const app = document.getElementById("app");
+    const sidebar = document.getElementById("sidebar");
+    const messagesEl = document.getElementById("messages");
+    const inputEl = document.getElementById("userInput");
+
     function addMessage(text, from){
-      const wrap=document.getElementById("messages");
-      const b=document.createElement("div");
-      b.className="bubble "+(from==="user"?"from-user":"from-ai");
-      b.textContent=text;
-      wrap.appendChild(b);
-      wrap.scrollTop=wrap.scrollHeight;
+      const b = document.createElement("div");
+      b.className = "bubble " + (from === "user" ? "from-user" : "from-ai");
+      b.textContent = text;
+      messagesEl.appendChild(b);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
     }
+
     function getSmartReply(text){
-      const t=text.toLowerCase();
-      if(t.includes("haye")) return "Haye! Sidee tahay maanta?";
-      if(t.includes("ii waran")) return "Wanaagsan, adiguna sidee tahay?";
-      if(t.includes("fahmay")) return "Haa, waan fahmay oo waan ka jawaabay.";
-      if(t.includes("yaasameey")) return "MoktarAI waxaa la sameeyay si uu u caawiyo dadka Soomaaliyeed.";
-      if(t.includes("goormaa")) return "MoktarAI waxaa la bilaabay 2025 si rasmi ah.";
-      return "Waan kuu diyaar ahay. Maxaan kaa caawin karaa?";
+      const t = (text || "").toLowerCase().trim();
+
+      // Greetings
+      if (/(haye|hye|hello|salaan)/.test(t)) return "Haye! Sidee tahay maanta?";
+      if (/ii\s*waran|sidee\s*tahay/.test(t)) return "Wanaagsan, adiguna sidee tahay?";
+
+      // Understanding / confirmation
+      if (/fahmay|fahamtay|ma\s*fahamtay|ma\s*fahantay/.test(t)) return "Haa, waan fahmay fariintaada oo waan ka jawaabay.";
+
+      // About MoktarAI
+      if (/yaa\s*sameey|yaasameey|yuu\s*sameeyay/.test(t)) return "MoktarAI waxaa la sameeyay si uu u caawiyo dadka Soomaaliyeed.";
+      if (/maxaa\s*loo\s*sameeyay|maxaa\s*lagu\s*sameeyay/.test(t)) return "Ujeeddo: caawimo degdeg ah, af‑Soomaali, UI nadiif ah, iyo jawaabo macquul ah.";
+      if (/goormee|goormaa\s*(la|aa)\s*same(e|y)/.test(t)) return "MoktarAI waxaa la bilaabay 2025 si rasmi ah.";
+
+      // Capabilities
+      if (/maxaa\s*qaban\s*kartaa|what\s*can\s*you\s*do/.test(t)) return "Waxaan sameyn karaa sharaxaad, qoraal, talooyin UI/UX, iyo jawaabo Somali‑friendly.";
+
+      // Help
+      if (/caawin|help|iga\s*caawi|maxaan\s*samayn/.test(t)) return "Waxaan kaa caawin karaa sharaxaad, qoraal, iyo talooyin. Maxaad rabtaa in aan ka bilaabo?";
+
+      return "Waan kuu diyaar ahay. Maxaan kaa caawin karaa si gaar ah?";
     }
-    document.getElementById("btn-send").onclick=()=>{
-      const text=document.getElementById("userInput").value.trim();
-      if(!text) return;
-      addMessage(text,"user");
-      setTimeout(()=>addMessage(getSmartReply(text),"ai"),400);
-      document.getElementById("userInput").value="";
+
+    // Send
+    document.getElementById("btn-send").onclick = () => {
+      const text = inputEl.value.trim();
+      if (!text) return;
+      addMessage(text, "user");
+      inputEl.value = "";
+      setTimeout(() => addMessage(getSmartReply(text), "ai"), 350);
     };
-    document.getElementById("btn-voice").onclick=()=>addMessage("Cod galinta waa la hawlgeliyay (jilid).","ai");
-    document.getElementById("btn-plus").onclick=()=>addMessage("➕ Create / Search / Add Image (demo)","ai");
-    document.getElementById("btn-share").onclick=()=>addMessage("🔗 Share: Copy link, WhatsApp, TikTok, PDF export (demo)","ai");
-    document.getElementById("btn-three").onclick=()=>addMessage("⋮ Menu: Pin, Delete, Export, Settings (demo)","ai");
+
+    // Voice
+    document.getElementById("btn-voice").onclick = () => addMessage("Cod galinta waa la hawlgeliyay (jilid). Ku qor ama ku sheeg.", "ai");
+
+    // Stop / Regen (simulated)
+    document.getElementById("btn-stop").onclick = () => addMessage("Joojiyay jawaabta (demo).", "ai");
+    document.getElementById("btn-regen").onclick = () => addMessage("Dib u soo saar (demo) — jawaab kale.", "ai");
+
+    // Share / 3-dot
+    document.getElementById("btn-share").onclick = () => addMessage("Share (demo) — Copy link / WhatsApp / TikTok / PDF.", "ai");
+    document.getElementById("btn-three").onclick = () => addMessage("⋮ Menu (demo) — Pin / Delete / Export / Settings.", "ai");
+
+    // + actions
+    document.getElementById("btn-plus").onclick = () => addMessage("Actions (demo) — ✨ Abuur / 🔍 Raadi / 🖼 Sawir.", "ai");
+
+    // Sidebar collapse
+    document.getElementById("btn-collapse").onclick = () => {
+      app.classList.toggle("collapsed");
+      addMessage("Sidebar: collapse/expand (demo).", "ai");
+    };
+
+    // Theme toggle
+    document.getElementById("btn-theme").onclick = () => {
+      document.documentElement.classList.toggle("theme-light");
+      addMessage("Theme beddel: Dark/Light (demo).", "ai");
+    };
+
+    // Menu actions
+    const menuMap = {
+      "btn-new":"Bog cusub (demo).",
+      "btn-library":"Maktabadda (demo).",
+      "btn-project":"Mashruuca (demo).",
+      "btn-convos":"Wada Sheekaysiga (demo).",
+      "btn-team":"Caawinta Kooxda (demo).",
+      "btn-search":"Raadi (demo).",
+      "btn-create":"Abuur (demo).",
+      "btn-addimg":"Ku dar sawir (demo).",
+      "btn-settings":"Dejinta (demo).",
+      "btn-help":"Caawimaad (demo).",
+      "btn-profile":"Profile (demo).",
+      "btn-logout":"Ka Bax (demo)."
+    };
+    Object.keys(menuMap).forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.onclick=()=>addMessage(menuMap[id],"ai");
+    });
+
+    // Initial
     addMessage("Ku soo dhawoow! Maxaan kaa caawin karaa maanta?","ai");
   </script>
 </body>
