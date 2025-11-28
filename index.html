@@ -1,8 +1,8 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MoktarAI — Full Chat</title>
+  <title>MoktarAI � Full Chat</title>
   <style>
     body{margin:0;font-family:sans-serif;background:#121212;color:#fff}
     .app{display:flex;height:100vh}
@@ -35,7 +35,7 @@
     <main class="main">
       <div class="topbar">
         <strong>Chat with MoktarAI</strong>
-        <div><button>🔗 Share</button></div>
+        <div><button>?? Share</button></div>
       </div>
       <div class="messages" id="messages"></div>
       <div class="footer">
@@ -69,7 +69,7 @@
         const data = await res.json();
         addBubble(data.reply, "ai");
       } catch (err) {
-        addBubble("❌ Error contacting AI engine.", "ai");
+        addBubble("? Error contacting AI engine.", "ai");
       }
     }
 
