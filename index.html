@@ -1,98 +1,143 @@
 ﻿<!DOCTYPE html>
-<html lang="so">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>MoktarAI — Copilot-style</title>
+  <title>MoktarAI — Copilot-style (English)</title>
   <link rel="icon" href="assets/logo.png">
   <style>
-    body{margin:0;font-family:Inter,Roboto,Arial,sans-serif;background:#121212;color:#E0E0E0}
+    :root{
+      --bg:#121212; --panel:#1E1E1E; --text:#E0E0E0; --muted:#9AA0A6;
+      --line:#333; --blue:#2D8CFF; --yellow:#FFD43B; --green:#28a745; --red:#E33;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Roboto,Arial,sans-serif}
     .app{display:flex;height:100vh}
-    .sidebar{width:280px;background:#1E1E1E;border-right:1px solid #333;display:flex;flex-direction:column;justify-content:space-between;padding:16px}
-    .sidebar-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    .logo{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #2D8CFF}
+
+    /* Sidebar (English, minimal per your images) */
+    .sidebar{width:280px;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px;gap:14px}
+    .sidebar-header{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:50%;border:2px solid var(--blue);object-fit:cover}
+    .app-name{font-weight:700}
     .menu{display:grid;gap:6px}
-    .menu button{background:transparent;border:1px solid transparent;color:inherit;padding:10px;border-radius:8px;text-align:left;cursor:pointer}
-    .menu button:hover{border-color:#333;background:#262626}
-    .account{display:flex;align-items:center;gap:10px;border-top:1px solid #333;padding-top:12px}
-    .avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #444}
+    .menu button{display:flex;align-items:center;gap:10px;background:transparent;border:none;color:inherit;padding:10px;border-radius:10px;text-align:left;cursor:pointer}
+    .menu button:hover{background:#262626}
+    .icon{width:20px;height:20px}
+    .divider{border:0;border-top:1px solid var(--line);margin:8px 0}
+    .section-title{font-size:13px;color:var(--muted);margin-bottom:6px}
+    .convos{display:grid;gap:6px}
+    .conv-item{padding:8px;border-radius:8px;border:1px solid transparent;cursor:pointer}
+    .conv-item:hover{border-color:#2a2a2a;background:#1a1a1a}
+    .account{display:flex;align-items:center;gap:10px;padding-top:8px}
+    .avatar{width:40px;height:40px;border-radius:50%;border:2px solid #444;object-fit:cover}
+    .handle{font-size:12px;color:var(--muted)}
+
+    /* Main chat area */
     .main{flex:1;display:flex;flex-direction:column}
-    .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #333}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
+    .topbar .btn{padding:8px 10px;border:none;border-radius:8px;background:#2a2a2a;color:inherit;cursor:pointer}
+
+    .welcome{text-align:center;padding:32px 16px}
+    .welcome h1{margin:0 0 12px;font-size:26px}
+    .search-bar{display:flex;justify-content:center;gap:8px}
+    .search-input{width:420px;max-width:80vw;padding:10px;border-radius:10px;border:1px solid var(--line);background:#181818;color:#fff}
+    .search-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:10px;cursor:pointer}
+
     .messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
     .bubble{max-width:72%;padding:12px 14px;border-radius:12px;line-height:1.55;box-shadow:0 2px 6px rgba(0,0,0,0.25);word-break:break-word}
-    .from-user{align-self:flex-end;background:#2D8CFF;color:#fff}
-    .from-ai{align-self:flex-start;background:#2E2E2E;color:#E0E0E0}
-    .footer{display:grid;grid-template-columns:auto 1fr auto auto auto auto;gap:8px;align-items:center;padding:12px;border-top:1px solid #333}
-    .btn{padding:8px 12px;border:none;border-radius:8px;cursor:pointer}
-    .btn-plus{background:#FFD43B;color:#000}
-    .input{width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#171717;color:inherit}
-    .btn-voice{background:#28a745;color:#fff}
-    .btn-send{background:#2D8CFF;color:#fff}
-    .btn-stop{background:#E33;color:#fff}
-    .btn-regen{background:#FFD43B;color:#000}
+    .from-user{align-self:flex-end;background:var(--blue);color:#fff}
+    .from-ai{align-self:flex-start;background:#2E2E2E;color:var(--text)}
+
+    .footer{display:grid;grid-template-columns:auto 1fr auto auto auto auto;gap:8px;align-items:center;padding:12px;border-top:1px solid var(--line)}
+    .btn{padding:8px 12px;border:none;border-radius:10px;cursor:pointer}
+    .btn-plus{background:var(--yellow);color:#000}
+    .input{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#181818;color:#fff}
+    .btn-voice{background:var(--green);color:#fff}
+    .btn-send{background:var(--blue);color:#fff}
+    .btn-stop{background:var(--red);color:#fff}
+    .btn-regen{background:var(--yellow);color:#000}
   </style>
 </head>
 <body>
-  <div class="app" id="app">
+  <div class="app">
+    <!-- Sidebar -->
     <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo.png" class="logo" alt="Logo">
+        <div class="app-name">MoktarAI</div>
+      </div>
+
+      <div class="menu">
+        <button><img src="assets/new.svg" class="icon" alt=""> New chat</button>
+        <button><img src="assets/library.svg" class="icon" alt=""> Library</button>
+        <button><img src="assets/project.svg" class="icon" alt=""> Projects</button>
+        <button><img src="assets/chat.svg" class="icon" alt=""> Your conversations</button>
+      </div>
+
+      <hr class="divider">
+
       <div>
-        <div class="sidebar-header">
-          <img src="assets/logo.png" class="logo" alt="Logo">
-          <div class="app-name">MoktarAI</div>
-        </div>
-        <div class="menu">
-          <button class="active">💬 Wada Sheekaysiga</button>
-          <button>➕ Bog Cusub</button>
-          <button>📚 Maktabadda</button>
-          <button>📂 Mashruuca</button>
-          <button>👥 Caawinta Kooxda</button>
-          <button>🔍 Raadi</button>
-          <button>✨ Abuur</button>
-          <button>🖼 Ku dar sawir</button>
-          <button>⚙️ Dejinta</button>
-          <button>❓ Caawimaad</button>
-          <button>👤 Profile</button>
-          <button>🚪 Ka Bax</button>
+        <div class="section-title">Your conversations</div>
+        <div class="convos" id="convos">
+          <!-- Dynamic conversation items will appear here -->
         </div>
       </div>
+
+      <hr class="divider">
+
       <div class="account">
         <img src="assets/avatar.png" class="avatar" alt="Avatar">
         <div>
           <div>Abdirizak Hero</div>
-          <div style="font-size:12px;opacity:.8">@naaifow17</div>
+          <div class="handle">@naaifow17</div>
         </div>
       </div>
     </aside>
 
+    <!-- Chat area -->
     <main class="main">
       <div class="topbar">
-        <div style="font-weight:700">Wada Sheekeysi AI</div>
-        <div style="display:flex;gap:8px">
+        <strong>AI conversation</strong>
+        <div>
           <button class="btn" id="btn-share">🔗 Share</button>
-          <button class="btn" id="btn-three">⋮</button>
+          <button class="btn" id="btn-menu">⋮</button>
+        </div>
+      </div>
+
+      <!-- Centered welcome -->
+      <div class="welcome" id="welcome">
+        <h1>Where do we start?</h1>
+        <div class="search-bar">
+          <input type="text" class="search-input" id="searchInput" placeholder="Ask anything...">
+          <button class="search-btn" id="searchVoice">🎤</button>
         </div>
       </div>
 
       <div class="messages" id="messages"></div>
 
+      <!-- Footer buttons (English) -->
       <div class="footer">
         <button class="btn btn-plus" id="btn-plus">+</button>
-        <input type="text" id="userInput" class="input" placeholder="Qor fariintaada halkan...">
-        <button class="btn btn-voice" id="btn-voice">🎤 Hadal</button>
-        <button class="btn btn-send" id="btn-send">Dir</button>
-        <button class="btn btn-stop" id="btn-stop">Jooji</button>
-        <button class="btn btn-regen" id="btn-regen">Dib u soo saar</button>
+        <input type="text" id="userInput" class="input" placeholder="Type your message here...">
+        <button class="btn btn-voice" id="btn-voice">🎤 Voice</button>
+        <button class="btn btn-send" id="btn-send">Send</button>
+        <button class="btn btn-stop" id="btn-stop">Stop</button>
+        <button class="btn btn-regen" id="btn-regen">Regenerate</button>
       </div>
     </main>
   </div>
 
   <script>
+    // Elements
     const msgs = document.getElementById("messages");
     const input = document.getElementById("userInput");
-
+    const welcome = document.getElementById("welcome");
+    const searchInput = document.getElementById("searchInput");
     const memory = { lastIntent: null, turns: 0 };
 
+    // UI helpers
     function addMessage(text, from){
+      if (welcome) welcome.style.display = "none";
       const b = document.createElement("div");
       b.className = "bubble " + (from === "user" ? "from-user" : "from-ai");
       b.textContent = text;
@@ -100,112 +145,112 @@
       msgs.scrollTop = msgs.scrollHeight;
     }
 
+    // Intent detection (English-focused)
     function detectIntent(t){
       const rules = [
-        { id:"greet",   test:/(haye|hello|hola|bonjour|salaan|iska\s*waran|ad(i|iga)\s*see\s*tahay|yaawaaye|niyow)/ },
-        { id:"who",     test:/(yaa\s+ku\s*sameey|kumaa\s*tahay|yaad\s*tahay|war\s+kumaa\s*tahay)/ },
-        { id:"about",   test:/(maxaa\s*loo\s*sameeyay|maxaa\s*lagu\s*sameeyay|ujeeddo|purpose)/ },
-        { id:"when",    test:/(goormee|goormaa|markee\s+la\s*sameeyay)/ },
-        { id:"capab",   test:/(maxaa\s*qaban\s*kartaa|what\s*can\s*you\s*do|awaamiir|commands)/ },
-        { id:"confirm", test:/(m(a|i)\s*la\s*socotaa\s*su'?a(a|a)sh(e|ey)da|ma\s*fahamtay|fahmay)/ },
-        { id:"stop",    test:/(waxba\s*ha\s*iga\s*caawin|jooji|stop|iskee)/ },
-        { id:"multi4",  test:/1\.\s*yaa.*2\.\s*maxaa.*3\.\s*goormee.*4\.\s*maxaa/ }
+        { id:"greet",   test:/(hi|hello|hey|how\s*are\s*you|what'?s\s*up)/ },
+        { id:"whoMade", test:/(who\s*made\s*you|who\s*built\s*you|who\s*created\s*you)/ },
+        { id:"name",    test:/(what\s*is\s*your\s*name|what'?s\s*your\s*name|name\??)/ },
+        { id:"when",    test:/(when\s*were\s*you\s*made|when\s*created|when\s*launched)/ },
+        { id:"capab",   test:/(what\s*can\s*you\s*do|capabilities|features)/ },
+        { id:"stop",    test:/(stop|don'?t\s*help|no\s*help)/ },
+        { id:"confirm", test:/(do\s*you\s*understand|did\s*you\s*get\s*it|got\s*it)/ },
+        { id:"multi4",  test:/1\.\s*who.*2\.\s*what.*3\.\s*when.*4\.\s*(2\s*\+\s*2|two\s*\+\s*two)/ },
+        { id:"mathQ",   test:/\d+\s*[\+\-\*\/]\s*\d+/ }
       ];
       for (const r of rules){ if (r.test.test(t)) return r.id; }
       return "other";
     }
 
+    // Math solver
+    function mathSolve(t){
+      const m = t.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+      if(!m) return null;
+      const a = parseFloat(m[1]), op = m[2], b = parseFloat(m[3]);
+      let result;
+      switch(op){
+        case "+": result = a+b; break;
+        case "-": result = a-b; break;
+        case "*": result = a*b; break;
+        case "/": result = (b!==0) ? a/b : "∞ (division by zero)"; break;
+        default: result = "N/A";
+      }
+      return `${a}${op}${b} = ${result}`;
+    }
+
+    // Reply logic (English answers)
     function reply(text){
       const t = (text||"").toLowerCase().trim();
       const intent = detectIntent(t);
-      memory.turns++;
-
-      // Anti-repeat: if same intent repeats, vary response
       const same = memory.lastIntent === intent;
       memory.lastIntent = intent;
+      memory.turns++;
+
+      // Structured math for 2+2 (as per your screenshot style)
+      if (/2\s*\+\s*2\s*=?\??/.test(t)) {
+        return "Let’s compute it step by step:\n2 + 2 = 4\n\nAnswer is 4 ✅\n\nIf you want, I can explain why 2+2 is always 4. Want an explanation?";
+      }
 
       switch(intent){
         case "greet":
-          return same ? "Waan joogaa, sidee dareenkaaga hadda?" : "Haa Moktar, waan fiicanahay! Adiguna see tahay?";
-        case "who":
-          return "MoktarAI ayaan ahay — Copilot‑style assistant Somali‑friendly, kaa caawiya qoraal, sharaxaad, iyo UI/UX.";
-        case "about":
-          return "Waxaa lagu sameeyay in uu bixiyo caawimo degdeg ah oo af‑Soomaali ah, UI nadiif ah, iyo jawaabo macquul ah.";
+          return same ? "I’m here. How are you feeling now?" : "I’m good! How are you?";
+        case "whoMade":
+          return same ? "MoktarAI was built by Muqtaar to empower the Somali community." : "MoktarAI was created by Muqtaar to help Somali users.";
+        case "name":
+          return "I’m MoktarAI — a Copilot‑style assistant, built for clarity and speed.";
         case "when":
-          return "MoktarAI waxaa la bilaabay si rasmi ah sanadka 2025.";
+          return "MoktarAI officially launched in 2025.";
         case "capab":
-          return "Waxaan sameyn karaa: sharaxaad, qoraal, talooyin UI/UX, snippets code, iyo prompts Somali/English.";
-        case "confirm":
-          return "Haa, waan la socdaa su’aashaada. Hadafkaagu maxay yahay si aan u siiyo jawaab toos ah?";
+          return "I can help with explanations, writing, UI/UX tips, simple code snippets, and clear English responses.";
         case "stop":
-          return "Ok, waan joojinayaa hadda. Marka aad diyaar noqoto, ii sheeg waxa aad rabto.";
+          return "Okay, I’ll pause. When you’re ready, tell me what you want next.";
+        case "confirm":
+          return "Yes, I got your message. What output do you need exactly?";
         case "multi4":
-          return "1) Sameeye: Muqtaar.\n2) Ujeeddo: Caawimo Somali‑friendly.\n3) Bilow: 2025.\n4) Qaban kara: qoraal, sharaxaad, UI/UX, snippets.";
+          return "1. Creator: Muqtaar.\n2. Purpose: Help Somali users with a Copilot‑style assistant.\n3. Launch: 2025.\n4. 2 + 2 = 4 ✅";
+        case "mathQ": {
+          const solved = mathSolve(t);
+          if (solved) return solved;
+          break;
+        }
         case "other":
-          // If it's a short/unclear message, ask for clarification once; then suggest paths
-          if (t.length < 4) return "Fariintaadu gaaban tahay. Ma ii caddeyn kartaa waxa aad rabto?";
+          if (t.length < 3) return "Your message is quite short. Could you clarify a bit more?";
           return same
-            ? "Hadalkaaga waan qabtay — bal ii sheeg nuxurka aad rabto si aan ugu socdo si toos ah."
-            : "Waan helay fariintaada. Sheeg ujeeddada: sharaxaad, code, ama UI/UX — midkee rabtaa?";
+            ? "I’ve got your note — tell me the exact outcome you want so I can proceed directly."
+            : "I received your message. Choose a path: explanation, code, or UI/UX — which one?";
       }
+      return "I didn’t fully understand. Could you clarify your goal so I can help precisely?";
     }
 
-    function sendNow(){
+    // Send helpers
+    function sendNow(text){
+      if (!text) return;
+      addMessage(text, "user");
+      setTimeout(()=>addMessage(reply(text), "ai"), 250);
+    }
+
+    // Footer inputs
+    document.getElementById("btn-send").onclick = ()=>{
       const text = input.value.trim();
       if (!text) return;
-      addMessage(text,"user");
       input.value = "";
-      setTimeout(()=>addMessage(reply(text),"ai"), 250);
-    }
+      sendNow(text);
+    };
+    document.getElementById("btn-voice").onclick = ()=>addMessage("🎤 Voice (demo): speak or type your message.","ai");
+    document.getElementById("btn-stop").onclick  = ()=>addMessage("Stopped the response (demo).","ai");
+    document.getElementById("btn-regen").onclick = ()=>addMessage("Regenerated (demo): here’s an alternative answer.","ai");
+    document.getElementById("btn-plus").onclick  = ()=>addMessage("➕ Actions: Create ✨ / Search 🔍 / Add image 🖼 (demo).","ai");
 
-    document.getElementById("btn-send").onclick = sendNow;
-    document.getElementById("btn-voice").onclick = ()=>addMessage("🎤 Cod (demo): ku qor ama ku sheeg fariintaada.","ai");
-    document.getElementById("btn-stop").onclick  = ()=>addMessage("Joojiyay jawaabta (demo).","ai");
-    document.getElementById("btn-regen").onclick = ()=>addMessage("Dib u soo saar (demo): jawaab kale.","ai");
-    document.getElementById("btn-plus").onclick  = ()=>addMessage("➕ Actions: ✨ Abuur / 🔍 Raadi / 🖼 Sawir (demo).","ai");
-
-    // Start message
-    addMessage("Ku soo dhawoow! Maxaan kaa caawin karaa maanta?","ai");
+    // Center search bar acts as first input
+    document.getElementById("searchVoice").onclick = ()=>addMessage("🎤 Voice search (demo).","ai");
+    searchInput.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter"){
+        const v = searchInput.value.trim();
+        if (!v) return;
+        searchInput.value = "";
+        sendNow(v);
+      }
+    });
   </script>
 </body>
 </html>
-<script>
-  const msgs=document.getElementById("messages");
-  const input=document.getElementById("userInput");
-
-  function addMessage(text,from){
-    const b=document.createElement("div");
-    b.className="bubble "+(from==="user"?"from-user":"from-ai");
-    b.textContent=text;
-    msgs.appendChild(b);
-    msgs.scrollTop=msgs.scrollHeight;
-  }
-
-  function reply(text){
-    const t=(text||"").toLowerCase().trim();
-
-    // Salaan
-    if(/haye|hello|salaan|saaxiib/.test(t)) return "Haa Moktar, waan fiicanahay! Adiguna sidee tahay?";
-    if(/waan\s*fiicanahay/.test(t)) return "Waa wax lagu farxo! Ilaahey ha kuu barakeeyo.";
-
-    // Su'aalaha muhiimka ah
-    if(/yaa\s*ku\s*sameey|adi\s*yaa\s*ku\s*sameey|kumaa\s*sameeyay/.test(t))
-      return "MoktarAI waxaa sameeyay Muqtaar si uu u caawiyo dadka Soomaaliyeed.";
-    if(/magacaa|magacaa\s*maxay\s*tahay/.test(t))
-      return "Magacaygu waa MoktarAI, Copilot‑style assistant Somali‑friendly.";
-    if(/goormee\s*lagu\s*sameey|markee\s*la\s*sameeyay/.test(t))
-      return "MoktarAI waxaa la bilaabay sanadka 2025.";
-
-    // Default
-    if(t.length<4) return "Fariintaadu gaaban tahay. Ma ii sharixi kartaa wax badan?";
-    return "Waan helay fariintaada. Bal ii sheeg waxa aad rabto si aan si fiican kuugu jawaabo.";
-  }
-
-  document.getElementById("btn-send").onclick=()=>{
-    const text=input.value.trim();
-    if(!text) return;
-    addMessage(text,"user");
-    input.value="";
-    setTimeout(()=>addMessage(reply(text),"ai"),300);
-  };
-</script>
